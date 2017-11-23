@@ -36,7 +36,7 @@ module game_process (clk, resetn, curr_board, go, index, set_black, next_board);
 
 	output reg [191:0] next_board;
 
-	reg [2:0] curr_state, next_state;
+	reg [2:0] curr_state, next_state; 
 	wire [2:0] node = curr_board[index + 2: index];
 
 	localparam  CHECK_ENABLE = 3'd0,
@@ -97,7 +97,7 @@ module controll_node_state(clk, resetn, curr, play, reverse, set_black, next_sta
 								if (play) 
 									begin
 										if (set_black)
-											next_state = BALCK;
+											next_state = BLACK;
 										else 
 											next_state = white;
 									end
