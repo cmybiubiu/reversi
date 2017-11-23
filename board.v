@@ -1,52 +1,98 @@
-module reversi(clk, resetn, x, y, go, ... );
-	input clk;
-	input resetn;
-	input x;
-	input y;
-	// 000 empty; 100 enable; 110 white; 111 black.
+module reversi(
+			input clk,
+			input resetn,
+			input x,
+			input y,
+			input go,
+				
+			);
 
-	// initial the board. 
-	reg [191:0] board, next_board;
+	//position 
+	integer position = y*8 + x;
+	integer index = position*3;
+
+	// initial the board.   000 empty; 100 enable; 110 white; 111 black.
+	reg [191:0] board, 
+				next_board = {27{3'b000}, 3'b110, 3'b111, 6{3'b000}, 3'b111, 3'b110, 27{3'b000}};
 
 	always@(posedge clk)
 		begin: 
 			if(resetn)  // initial the board.
 				board <= {27{3'b000}, 3'b110, 3'b111, 6{3'b000}, 3'b111, 3'b110, 27{3'b000}};		
 			else
-				board <= next_board;
-		end // state_FFS
+				// USE the module game_process.
+		end 
 endmodule
 
-module controll_node (clk, resetn, curr, play, set_black, next);
-
-
-endmodule
-
-module controll_node_state(clk, resetn, curr, play, reverse, set_black, next);
+module game_process (clk, resetn, curr_board, go, index, set_black, next_board);
 	input clk;
 	inout resetn;
-	input [8:0] curr;
+	input [191:0] curr_board;
+	input go;
+	input index;
+	input set_black; //which player.
+
+	output reg [191:0] next_board;
+
+	reg [2:0] curr_state, next_state;
+	wire [2:0] node = curr_board[index + 2: index];
+
+	localparam  CHECK_ENABLE = 3'd0,
+				PUT_DWON = 3'd1,
+				REVERSE = 3'd2,
+				FINISH = 3'd3;
+	
+	always @(*)
+	begin
+		case(curr_state)
+			CHECK_ENABLE : next_state = enable ? PUT_DWON : FINISH;
+			PUT_DWON : next_state =  go ? REVERSE : PUT_DWON;
+			REVERSE : next_state = go ? FINISH : REVERSE;
+			FINISH : next_state = go ? CHECK_ENABLE :FINISH;
+			default : next_state = FINISH;
+		endcase
+	end
+
+	always @(*)
+	begin
+		if (curr_state == CHECK_ENABLE)
+			// Create a module to check if there are enable steps.
+		else if (curr_state == PUT_DWON)
+			controll_node_state c1(.clk(clk), .resetn(resetn), .curr(node), .play(go), .reverse(), .set_black(set_black),  .next(curr_board[index + 2: index]));
+		else if (curr_state == REVERSE)
+			// Create module to reverse all possible nodes.
+		else if (curr_state == FINISH)
+			next_board <= curr_board;
+	end
+
+
+endmodule
+
+module controll_node_state(clk, resetn, curr, play, reverse, set_black,  next);
+	input clk;
+	inout resetn;
+	input [2:0] curr;
 	input play;
 	input set_black;
 	input reverse;
-	output [8:0] next; 
+	output [2:0] next; 
 	
-	wire [5:0] position = curr[5:0];
 	
 	reg [2:0] curr_state, next_state;
 	
-	curr_state = curr;
+	
 	
 	localparam EMPTY = 3'd0,
 				  ENABLE = 3'd1,
 				  BLACK = 3'd2,
 				  WHITE = 3'd3;
+
 	
 	// SET the next state of this node
 	always @(*)
 	begin: state_table
 			case (curr_state)
-				EMPTY: next_state = play ?  ENABLE : EMPTY ;
+				EMPTY: next_state = play ?  ENABLE : EMPTY;
 				ENABLE: begin 
 								if (play) 
 									begin
@@ -62,25 +108,5 @@ module controll_node_state(clk, resetn, curr, play, reverse, set_black, next);
 				WHITE : next_state = reverse ? BLACK : WHITE;
 						 
 			endcase
-	end
-	               
-	// current_state registers
-	always@(posedge clk)
-		begin: 
-			  if(resetn)  // initial the node
-					begin 
-						if (position == 6'b011_011 || position == 6'b100_100)
-							curr_state <= WHITE;
-						else if (position == 6'b100_011|| position == 6'b011_100)
-							curr_state <= BLACK;
-						else 
-							curr_state <= EMPTY;
-					end 
-					
-			  else
-					curr_state <= next_state;
-		end // state_FFS
-		
-	assign next[8:6] = curr_state; 
-	assign next[5:0] = position; 
+	end 
 endmodule  
