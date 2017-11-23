@@ -24,6 +24,7 @@ module reversi(
 		end 
 endmodule
 
+//Determinate the state of this game
 module game_process (clk, resetn, curr_board, go, index, set_black, next_board);
 	input clk;
 	inout resetn;
@@ -58,34 +59,32 @@ module game_process (clk, resetn, curr_board, go, index, set_black, next_board);
 		if (curr_state == CHECK_ENABLE)
 			// Create a module to check if there are enable steps.
 		else if (curr_state == PUT_DWON)
-			controll_node_state c1(.clk(clk), .resetn(resetn), .curr(node), .play(go), .reverse(), .set_black(set_black),  .next(curr_board[index + 2: index]));
+			// Change the state of node which the player choose. 
+			controll_node_state c1(.clk(clk), .resetn(resetn), .curr(node), .play(go), .reverse(), .set_black(set_black),  .next_state(curr_board[index + 2: index]));
 		else if (curr_state == REVERSE)
 			// Create module to reverse all possible nodes.
 		else if (curr_state == FINISH)
 			next_board <= curr_board;
 	end
-
-
 endmodule
 
-module controll_node_state(clk, resetn, curr, play, reverse, set_black,  next);
+// Set the state of a single node.
+module controll_node_state(clk, resetn, curr, play, reverse, set_black, next_state);
 	input clk;
 	inout resetn;
 	input [2:0] curr;
 	input play;
 	input set_black;
 	input reverse;
-	output [2:0] next; 
+	output reg [2:0] next_state; 
+	
+	reg [2:0] curr_state = curr, next_state;
 	
 	
-	reg [2:0] curr_state, next_state;
-	
-	
-	
-	localparam EMPTY = 3'd0,
-				  ENABLE = 3'd1,
-				  BLACK = 3'd2,
-				  WHITE = 3'd3;
+	localparam EMPTY = 3'b000,
+				  ENABLE = 3'b100,
+				  BLACK = 3'b111,
+				  WHITE = 3'b110;
 
 	
 	// SET the next state of this node
