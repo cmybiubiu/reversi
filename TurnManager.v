@@ -1,6 +1,7 @@
 //The module that manages whose turn it is
 
 module TurnManager(
+				input initialize,
 				input nextTurn, //make sure nextTurn signal only goes high when all pieces that need to be changed are changed.
 				input clk,
 				input resetn
@@ -12,11 +13,12 @@ module TurnManager(
 	
 	always@(posedge clk, posedge nextTurn)
 	begin
-		whiteOrBlack = black; //start as black
+		if (initialize)
+			whiteOrBlack <= black; //start as black
 		if (resetn)
-			whiteOrBlack = black;
+			whiteOrBlack <= black;
 		else if (nextTurn)
-			whiteOrBlack = ~whiteOrBlack;
+			whiteOrBlack <= ~whiteOrBlack;
 	end
 
 endmodule 
