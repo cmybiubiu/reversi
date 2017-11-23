@@ -1,10 +1,11 @@
+// WE need a module to draw the updated  board with nodes.
+
 module reversi(
 			input clk,
 			input resetn,
 			input x,
 			input y,
-			input go,
-				
+			input go,	
 			);
 
 	//position 
@@ -24,7 +25,7 @@ module reversi(
 		end 
 endmodule
 
-//Determinate the state of this game
+//Determinate the state of this game (also the board)
 module game_process (clk, resetn, curr_board, go, index, set_black, next_board);
 	input clk;
 	inout resetn;
