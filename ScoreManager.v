@@ -8,7 +8,7 @@ module ScoreManager(
 					input nextTurn, //rename to enable signal?
 							
 					output reg [63:0] score_white,
-					output reg [63:0] score_blac,
+					output reg [63:0] score_black,
 					output reg count_done
 					);
 	reg count_enable; //enable signal for counting
@@ -48,9 +48,9 @@ module ScoreManager(
 		end
 		else if (count_enable| counter != 0) begin
 			counter <= counter + 3;
-			if (curr_board[counter+ 2, counter] == 3'b110)
+			if (curr_board[counter+:2] == 3'b110) //Using Verilog feature called "Variable Part Select." Syntax curr_board[x+:i] where x is the variable and i is the length of the binary number that you want.
 				counter_white <= counter_white + 1;
-			else if (curr_board[counter+2, counter] == 3'b111)
+			else if (curr_board[counter+:2] == 3'b111)
 				counter_black <= counter_black+ 1;
 		end
 		else if (count_done) begin
