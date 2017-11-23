@@ -8,7 +8,7 @@ module controll_node_state(clk, resetn, curr, play, reverse, set_black, next_sta
 	input reverse;
 	output reg [2:0] next_state; 
 	
-	reg [2:0] curr_state = curr;
+
 	
 	
 	localparam EMPTY = 3'b000,
@@ -20,7 +20,7 @@ module controll_node_state(clk, resetn, curr, play, reverse, set_black, next_sta
 	// SET the next state of this node
 	always @(*)
 	begin: state_table
-			case (curr_state)
+			case (curr)
 				EMPTY: next_state = play ?  ENABLE : EMPTY;
 				ENABLE: begin 
 								if (play) 
@@ -33,8 +33,8 @@ module controll_node_state(clk, resetn, curr, play, reverse, set_black, next_sta
 								else 
 									next_state = ENABLE;
 						  end
-				BLACK : next_state = reverse ? WHITE : BLACK;
-				WHITE : next_state = reverse ? BLACK : WHITE;
+				BLACK : next_state = (reverse && play ) ? WHITE : BLACK;
+				WHITE : next_state = (reverse && play ) ? BLACK : WHITE;
 				default:next_state = EMPTY;
 			endcase
 	end 
