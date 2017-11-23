@@ -106,7 +106,7 @@ module controll_node_state(clk, resetn, curr, play, reverse, set_black, next_sta
 						  end ;
 				BLACK : next_state = reverse ? WHITE : BLACK;
 				WHITE : next_state = reverse ? BLACK : WHITE;
-						 
+				default:next_state = EMPTY;
 			endcase
 	end 
 endmodule  
