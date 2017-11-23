@@ -72,7 +72,7 @@ endmodule
 // Set the state of a single node.
 module controll_node_state(clk, resetn, curr, play, reverse, set_black, next_state);
 	input clk;
-	inout resetn;
+	input resetn;
 	input [2:0] curr;
 	input play;
 	input set_black;
