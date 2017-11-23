@@ -14,7 +14,7 @@ module ScoreManager(
 	reg count_enable; //enable signal for counting
 	reg [63:0] counter_white;
 	reg [63:0] counter_black;
-	reg [63:0] counter;
+	reg [191:0] counter;
 	
 	always @(posedge clk)
 	begin
@@ -39,7 +39,7 @@ module ScoreManager(
 			count_enable <= 0;
 			counter <= 0;
 		end
-		else if (counter == 63) begin
+		else if (counter == 191) begin
 			counter_white <= 0;
 			counter_black <= 0;
 			count_done <= 1;
@@ -56,6 +56,7 @@ module ScoreManager(
 		else if (count_done) begin
 			score_white <= counter_white;
 			score_black <= counter_black;
-	begin
+		end
+	end
 
 endmodule 
