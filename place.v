@@ -4,7 +4,7 @@ module place (
 			
 			input place_enable,
 			input [191:0] curr_board,
-			input index,
+			input [4:0] index,
 			input player_black,
 			
 			output reg [191:0] result_board

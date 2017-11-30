@@ -18,7 +18,7 @@ force {resetn} 0 0, 1 15
 
 force {place_enable} 0 0, 1 40 
 
-force {index} 0 
+force {index} 5'b00000
 
 force {player_black} 0 0, 1 20 -r 40
 
