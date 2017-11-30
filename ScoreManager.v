@@ -7,14 +7,14 @@ module ScoreManager(
 					input resetn,
 					input nextTurn, //rename to enable signal?
 							
-					output reg [63:0] score_white,
-					output reg [63:0] score_black,
+					output reg [5:0] score_white,
+					output reg [5:0] score_black,
 					output reg count_done
 					);
 	reg count_enable; //enable signal for counting
-	reg [63:0] counter_white;
-	reg [63:0] counter_black;
-	reg [191:0] counter;
+	reg [5:0] counter_white;
+	reg [5:0] counter_black;
+	reg [7:0] counter; //191 in binary is 10111111
 	
 	always @(posedge clk)
 	begin
@@ -29,33 +29,31 @@ module ScoreManager(
 			
 	always @(posedge clk)
 	begin
-		counter_white <= 0;
-		counter_black <= 0;
-		counter <= 0;
-		count_done <= 0;
-		if (resetn) begin
+		if (resetn|initialize) begin
 			counter_white <= 0;
 			counter_black <= 0;
 			count_enable <= 0;
 			counter <= 0;
+			count_done <= 0;
 		end
-		else if (counter == 191) begin
-			counter_white <= 0;
-			counter_black <= 0;
-			count_done <= 1;
+		else if (counter == 192) begin //supposed to be 192 since the counter and counter_white/counter_black are iterated at the same time
+			count_done <= 1;				//Thus counter_black/white is using the old counter value. ie when counter = 192, counter_black/white = old_counter_b/w + (192/3 - 1)
 			counter <= 0;
 			
 		end
-		else if (count_enable| counter != 0) begin
+		else if (count_enable | counter != 0) begin
 			counter <= counter + 3;
-			if (curr_board[counter+:2] == 3'b110) //Using Verilog feature called "Variable Part Select." Syntax curr_board[x+:i] where x is the variable and i is the length of the binary number that you want.
+			if (curr_board[counter+:3] == 3'b110) //Using Verilog feature called "Variable Part Select." Syntax curr_board[x+:i] where x is the variable and i is the length of the binary number that you want.
 				counter_white <= counter_white + 1;
-			else if (curr_board[counter+:2] == 3'b111)
+			else if (curr_board[counter+:3] == 3'b111)
 				counter_black <= counter_black+ 1;
 		end
 		else if (count_done) begin
 			score_white <= counter_white;
 			score_black <= counter_black;
+			counter_white <= 0;
+			counter_black <= 0;
+			count_done <= 0;
 		end
 	end
 
