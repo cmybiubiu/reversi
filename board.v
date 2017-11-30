@@ -12,7 +12,7 @@ module reversi(
 
 	//position on the board
 	wire position = y*8 + x;
-	wire index = position*3;
+	wire [4:0] index = position*3;
 	
 	// position on the screen , still need to calculate.
 	wire [7:0]real_x;
@@ -22,12 +22,14 @@ module reversi(
 
 	// initial the board.   000 empty; 100 enable; 110 white; 111 black.
 	reg [191:0]  board, next_board;
-	reg  check_enable, put_enable, reverse_enable, draw_enable; 
+	reg  check_enable, place_enable, reverse_enable, draw_enable;
+	reg  player_black; 
 
 	always@(posedge clk)
 		begin: 
 			if(resetn)  // initial the board.
-				board <= {27{3'b000}, 3'b110, 3'b111, 6{3'b000}, 3'b111, 3'b110, 27{3'b000}};		
+				board <= {27{3'b000}, 3'b110, 3'b111, 6{3'b000}, 3'b111, 3'b110, 27{3'b000}};	
+				player_balce <= 1'b1; 
 			else
 				board <= next_board;
 		end
@@ -35,11 +37,24 @@ module reversi(
 	game_process g0 (.clk(clk),
 					 .resetn(resetn),
 					 .go(go),
-					 .check_enable(),
-					 .put_enable(),
-					 .reverse_enable(),
-					 .draw_enable()
+					 .check_enable(check_enable),
+					 .place_enable(place_enable),
+					 .reverse_enable(reverse_enable),
+					 .draw_enable(draw_enable)
 					 );
+		
+
+	place p0(
+			.clk(clk),
+			.resetn(resetn),
+			
+			.place_enable(place_enable),
+			.curr_board(board),
+			.index(index),
+			.player_black(player_black),
+			
+			.result_board(next_board)
+			);
 					 
 	
 		
