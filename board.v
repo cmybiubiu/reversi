@@ -7,12 +7,13 @@ module reversi(
 			input [2:0]y,
 			input go,
 			
-			output reg [191:0] board_result
+			output reg [191:0] board_result,
+			output reg [2:0] real_colour
 			);
 
 	//position on the board
 	wire position = y*8 + x;
-	wire [4:0] index = position*3;
+	wire [6:0] index = position*3;
 	
 	// position on the screen , still need to calculate.
 	wire [7:0]real_x;
