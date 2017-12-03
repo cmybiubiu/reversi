@@ -4,7 +4,11 @@ module place (
 			
 			input place_enable,
 			input [191:0] curr_board,
+<<<<<<< HEAD
 			input [4:0] index,
+=======
+			input [6:0] index,
+>>>>>>> 700eff26935be12bc5709d508be00a6cc8d6f4da
 			input player_black,
 			
 			output reg [191:0] result_board
