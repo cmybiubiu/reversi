@@ -7,9 +7,9 @@ module checkValidHelper (
         input [127:0] board;
         input player_black;
 
-        output reg valid
-
-);
+        output reg valid;
+        output [5:0] end_point
+        );
     
     reg [2:0] index1, index2;
     localparam [1:0] player = {1'b1, player_black}; 
@@ -19,20 +19,24 @@ module checkValidHelper (
     begin
         if (resetn)
             valid <= 0;
+
         else
-            begin
+            begin            
+                index1 <= x;
+                index2 <= y;
+                
                 case (direction)
                 3'b000: begin  //vertically upper
                             if (y > 1)
                                 begin 
-                                    index1 <= y -1;
-                                    if ( board[x][index1]== opposite_player)
+                                    index2 <= y -1;
+                                    if ( board[x][index2]== opposite_player)
                                         begin
                                             valid <= 0;
-                                            while (index1 != 0) 
+                                            while (index2 != 0) 
                                                 begin 
-                                                    index1 <=  index1 -1;
-                                                    if (board[x][index1] == player)
+                                                    index2 <=  index2 -1;
+                                                    if (board[x][index2] == player)
                                                         valid <= 1;
                                                 end 
                                         end
@@ -47,14 +51,14 @@ module checkValidHelper (
                 3'b001: begin //vertically down
                             if (y < 6)
                                 begin 
-                                    index1 <= y + 1;
-                                    if ( board[x][index1]== opposite_player)
+                                    index2 <= y + 1;
+                                    if ( board[x][index2]== opposite_player)
                                         begin
                                             valid <= 0;
-                                            while (index1 != 7) 
+                                            while (index2 != 7) 
                                                 begin 
-                                                    index1 <=  index1 + 1;
-                                                    if (board[x][index1] == player)
+                                                    index2 <=  index2 + 1;
+                                                    if (board[x][index2] == player)
                                                         valid <= 1;
                                                 end 
                                         end
@@ -212,5 +216,5 @@ module checkValidHelper (
         endcase
     end
 
-
+    assign end_point = {index1, index2};
 endmodule

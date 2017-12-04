@@ -6,7 +6,8 @@ module checkIfValidMove (
             input player_black;
             input [127:0] board;
 
-            output reg [7:0] valids
+            output [7:0] valids;
+            output [47:0] end_points
 );
     checkValidHelper c0(
         .clk(clk),
@@ -17,7 +18,9 @@ module checkIfValidMove (
         .board(board),
         .player_black(player_black),
 
-        .valid(valids[0])
+        .valid(valids[0]),
+        .end_point(end_points[5:0])
+
         );
 
     checkValidHelper c1(
@@ -29,7 +32,8 @@ module checkIfValidMove (
         .board(board),
         .player_black(player_black),
 
-        .valid(valids[1])
+        .valid(valids[1]),
+        .end_point(end_points[11:6])
         );
     
     checkValidHelper c2(
@@ -41,7 +45,8 @@ module checkIfValidMove (
         .board(board),
         .player_black(player_black),
 
-        .valid(valids[2])
+        .valid(valids[2]),
+        .end_point(end_points[17:12])
         );
 
     checkValidHelper c3(
@@ -53,7 +58,8 @@ module checkIfValidMove (
         .board(board),
         .player_black(player_black),
 
-        .valid(valids[3])
+        .valid(valids[3]),
+        .end_point(end_points[23:18])
         );
     
     checkValidHelper c4(
@@ -65,7 +71,8 @@ module checkIfValidMove (
         .board(board),
         .player_black(player_black),
 
-        .valid(valids[4])
+        .valid(valids[4]),
+        .end_point(end_points[29:24])
         );
     
     checkValidHelper c5(
@@ -77,7 +84,8 @@ module checkIfValidMove (
         .board(board),
         .player_black(player_black),
 
-        .valid(valids[5])
+        .valid(valids[5]),
+        .end_point(end_points[35:30])
         );
     
     checkValidHelper c6(
@@ -89,7 +97,8 @@ module checkIfValidMove (
         .board(board),
         .player_black(player_black),
 
-        .valid(valids[6])
+        .valid(valids[6]),
+        .end_point(end_points[41:36])
         );
 
     checkValidHelper c7(
@@ -101,6 +110,7 @@ module checkIfValidMove (
         .board(board),
         .player_black(player_black),
 
-        .valid(valids[1])
+        .valid(valids[7]),
+        .end_point(end_points[47:42])
         );
 endmodule
