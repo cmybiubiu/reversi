@@ -5,6 +5,7 @@ module KeyBoardInterpreter(input valid,
 									input [7:0] outCode,
 									input clk,
 									
+									output reg enterEn,
 									output reg moveRightEn,
 									output reg moveLeftEn,
 									output reg moveUpEn,
@@ -13,12 +14,14 @@ module KeyBoardInterpreter(input valid,
 
 	always @(posedge valid, posedge clk)
 	begin: enable_signals
+		enterEn <= 0;
 		moveRightEn <= 0;
 		moveLeftEn <= 0;
 		moveUpEn <= 0;
 		moveDownEn <= 0;
 		if (valid && makeBreak) begin
 			case(outCode)
+				8'h5A: enterEn <= 1;
 				8'h74: moveRightEn <= 1;
 				8'h6B: moveLeftEn <= 1;
 				8'h75: moveUpEn <= 1;
