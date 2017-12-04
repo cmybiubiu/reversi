@@ -30,13 +30,13 @@ module checkValidHelper (
                             if (y > 1)
                                 begin 
                                     index2 <= y -1;
-                                    if ( board[x][index2]== opposite_player)
+                                    if ( board[index2][x]== opposite_player)
                                         begin
                                             valid <= 0;
                                             while (index2 != 0) 
                                                 begin 
                                                     index2 <=  index2 -1;
-                                                    if (board[x][index2] == player)
+                                                    if (board[index2][x] == player)
                                                         valid <= 1;
                                                 end 
                                         end
@@ -52,13 +52,13 @@ module checkValidHelper (
                             if (y < 6)
                                 begin 
                                     index2 <= y + 1;
-                                    if ( board[x][index2]== opposite_player)
+                                    if ( board[index2][x]== opposite_player)
                                         begin
                                             valid <= 0;
                                             while (index2 != 7) 
                                                 begin 
                                                     index2 <=  index2 + 1;
-                                                    if (board[x][index2] == player)
+                                                    if (board[index2][x] == player)
                                                         valid <= 1;
                                                 end 
                                         end
@@ -74,13 +74,13 @@ module checkValidHelper (
                             if (x > 1)
                                 begin 
                                     index1 <= x -1;
-                                    if ( board[index1][y]== opposite_player)
+                                    if ( board[y][index1]== opposite_player)
                                         begin
                                             valid <= 0;
                                             while (index1 != 0) 
                                                 begin 
                                                     index1 <=  index1 -1;
-                                                    if (board[index1][y] == player)
+                                                    if (board[y][index1] == player)
                                                         valid <= 1;
                                                 end 
                                         end
@@ -96,13 +96,13 @@ module checkValidHelper (
                             if (x < 6)
                                 begin 
                                     index1 <= x + 1;
-                                    if ( board[index1][y]== opposite_player)
+                                    if ( board[y][index1]== opposite_player)
                                         begin
                                             valid <= 0;
                                             while (index1 != 0) 
                                                 begin 
                                                     index1 <=  index1 + 1;
-                                                    if (board[index1][y] == player)
+                                                    if (board[y][index1] == player)
                                                         valid <= 1;
                                                 end 
                                         end
@@ -119,14 +119,14 @@ module checkValidHelper (
                                 begin 
                                     index1 <= x -1;
                                     index2 <= y - 1;
-                                    if ( board[index1][index2]== opposite_player)
+                                    if ( board[index2][index1]== opposite_player)
                                         begin
                                             valid <= 0;
                                             while ((index1 != 0) && (index2 != 0))
                                                 begin 
                                                     index1 <=  index1 -1;
                                                     index2 <= index2 -1;
-                                                    if (board[index1][index2] == player)
+                                                    if (board[index2][index1] == player)
                                                         valid <= 1;
                                                 end 
                                         end
@@ -143,14 +143,14 @@ module checkValidHelper (
                                 begin 
                                     index1 <= x -1;
                                     index2 <= y + 1;
-                                    if ( board[index1][index2]== opposite_player)
+                                    if ( board[index2][index1]== opposite_player)
                                         begin
                                             valid <= 0;
                                             while ((index1 != 0) && (index2 != 7))
                                                 begin 
                                                     index1 <=  index1 - 1;
                                                     index2 <= index2  + 1;
-                                                    if (board[index1][index2] == player)
+                                                    if (board[index2][index1] == player)
                                                         valid <= 1;
                                                 end 
                                         end
@@ -167,14 +167,14 @@ module checkValidHelper (
                                 begin 
                                     index1 <= x + 1;
                                     index2 <= y - 1;
-                                    if ( board[index1][index2]== opposite_player)
+                                    if ( board[index2][index1]== opposite_player)
                                         begin
                                             valid <= 0;
                                             while ((index1 != 7) && (index2 != 0))
                                                 begin 
                                                     index1 <=  index1 + 1;
                                                     index2 <= index2 - 1;
-                                                    if (board[index1][index2] == player)
+                                                    if (board[index2][index1] == player)
                                                         valid <= 1;
                                                 end 
                                         end
@@ -191,14 +191,14 @@ module checkValidHelper (
                                 begin 
                                     index1 <= x + 1;
                                     index2 <= y + 1;
-                                    if ( board[index1][index2]== opposite_player)
+                                    if ( board[index2][index1]== opposite_player)
                                         begin
                                             valid <= 0;
                                             while ((index1 != 7) && (index2 != 7))
                                                 begin 
                                                     index1 <=  index1 +1;
                                                     index2 <= index2 +1;
-                                                    if (board[index1][index2] == player)
+                                                    if (board[index2][index1] == player)
                                                         valid <= 1;
                                                 end 
                                         end
