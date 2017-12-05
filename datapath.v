@@ -1,28 +1,38 @@
 module datapath(
 			//should be input to most, if not all modules
 			input clk,
+			
 			//resetn should be activated from control and should reset most, if not all modules.
 			input resetn,
-			
-			input ld_colour, ld_x, ld_y,
 			input writeEn,
-			input [7:0] current_state,
-			
-			//these feed into moveHiglight
+			input drawBoardEn,
+			input drawInitialPiecesEn,
 			input enterEn,
 			input moveRightEn,
 			input moveLeftEn,
 			input moveUpEn,
-			input moveDownEn
+			input moveDownEn,
+			input moveHighlightEn,
+			input checkIfValidMoveEn,
+			input placeEn,
+			input flipEn,
+			input scoreManagerEn,
+			input determineHasTurnEn,
+			input determineOpponent,
+			input determineCurrent,
+			input TurnManagerEn,
+			input removeHighlightEn,
 			
 			//bit coordinates sent to the VGA to be drawn
 			output reg [7:0] datapath_out_x, datapath_out_y,
 			
 			//datapath_out_colour depends on state (multiplexer)
-			output reg [2:0] datapath_out_colour
+			output reg [2:0] datapath_out_colour,
 			
 			//most modules will have an output go, which go signal is used depends on current_state (multiplexer)
-			output reg go;
+			output reg go,
+			output validMove,
+			output hasTurn
 			);
 	//current coordinate location of the player on the screen		
 	reg [7:0] x;
@@ -34,6 +44,32 @@ module datapath(
 	//add variables, regs, and wires here
 	
 	//add go multiplexer here
+	always @(*) begin
+		if (resetn)
+			go = resetDone;
+		else if (drawBoardEn)
+			go = drawBoardDone;
+		else if (drawInitialPiecesEn)
+			go = drawInitialPiecesDone;
+		else if (moveHighlightEn)
+			go = moveHighlightDone;
+		else if (checkIfValidMoveEn)
+		
+		else if (placeEn)
+		
+		else if (flipEn)
+		
+		else if (scoreManagerEn)
+		
+		else if (determineHasTurnEn)
+		
+		else if (determineOpponent)
+		
+		else if (determineCurrent)
+		
+		else if (TurnManagerEn)
+		
+		else if (removeHighlightEn)
 	
 	//add datapath_out_colour multiplexer here
 	
