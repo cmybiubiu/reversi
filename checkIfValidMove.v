@@ -9,7 +9,7 @@ module checkIfValidMove (
             output [7:0] valid,
             output [47:0] end_points
 );
-    checkValidHelper c0(
+    checkValidHelper ch0(
         .clk(clk),
         .resetn(resetn),
         .x(x),
@@ -20,10 +20,9 @@ module checkIfValidMove (
 
         .valid(valids[0]),
         .end_point(end_points[5:0])
-
         );
 
-    checkValidHelper c1(
+    checkValidHelper ch1(
         .clk(clk),
         .resetn(resetn),
         .x(x),
@@ -36,7 +35,7 @@ module checkIfValidMove (
         .end_point(end_points[11:6])
         );
     
-    checkValidHelper c2(
+    checkValidHelper ch2(
         .clk(clk),
         .resetn(resetn),
         .x(x),
@@ -49,7 +48,7 @@ module checkIfValidMove (
         .end_point(end_points[17:12])
         );
 
-    checkValidHelper c3(
+    checkValidHelper ch3(
         .clk(clk),
         .resetn(resetn),
         .x(x),
@@ -62,7 +61,7 @@ module checkIfValidMove (
         .end_point(end_points[23:18])
         );
     
-    checkValidHelper c4(
+    checkValidHelper ch4(
         .clk(clk),
         .resetn(resetn),
         .x(x),
@@ -75,7 +74,7 @@ module checkIfValidMove (
         .end_point(end_points[29:24])
         );
     
-    checkValidHelper c5(
+    checkValidHelper ch5(
         .clk(clk),
         .resetn(resetn),
         .x(x),
@@ -88,7 +87,7 @@ module checkIfValidMove (
         .end_point(end_points[35:30])
         );
     
-    checkValidHelper c6(
+    checkValidHelper ch6(
         .clk(clk),
         .resetn(resetn),
         .x(x),
@@ -101,7 +100,7 @@ module checkIfValidMove (
         .end_point(end_points[41:36])
         );
 
-    checkValidHelper c7(
+    checkValidHelper ch7(
         .clk(clk),
         .resetn(resetn),
         .x(x),
