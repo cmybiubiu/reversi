@@ -1,25 +1,34 @@
 module place ( 
 			input clk,
 			input resetn,
-			
+			input [2:0] x,
+			inout [2:0] y,
 			input place_enable,
-			input [191:0] curr_board,
-			input [4:0] index,
+			input [127:0] curr_board,
 			input player_black,
 			
-			output reg [191:0] result_board
+			output reg [127:0] result_board
 			);
+		
+		wire [6:0] index;
+		assign index[6:1] = {y, x};
+		assign index[0] = 1'b0;
 
+		
 		always @(posedge clk)
 		begin
-					result_board <= curr_board;
+			if (resetn)
+				result_board <= curr_board;
+			else 
+				begin 
 					if (place_enable)
 						begin
 							if (player_black)
-								result_board[index + : 3]  <= 3'b111;
+								result_board[index + : 2]  <= 2'b11;
 							else 
-								result_board[index + : 3]  <= 3'b110;
-					end								
+								result_board[index + : 2]  <= 2'b10;
+						end	
+				end
 		end
 
 

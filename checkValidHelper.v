@@ -13,6 +13,7 @@ module checkValidHelper (
     
     reg [2:0] curr_x, curr_y;
     reg [6:0] INDEX;
+	 reg [1:0] curr_piece;
     wire [1:0] player = {1'b1, player_black}; 
     wire [1:0] opposite_player = {1'b1, ~player_black};
 	 reg oppo_around = 0;
@@ -27,21 +28,22 @@ module checkValidHelper (
             begin            
                 curr_x <= x;
                 curr_y <= y;
-					 INDEX <= {y, x};
+					 INDEX[6:1] <= {y, x};
+					 INDEX[0] <= 1'b0;
+					 curr_piece <= board[INDEX + : 2];
                 case (direction)
                 3'b000: begin  //vertically upper
-                            if (y > 1)
+                            if ((y > 1) && (curr_piece == 2'b00))
                                 begin 
-                                    curr_y <= y -1;
+                                    curr_y <= curr_y - 1;
                                     INDEX <= INDEX - 16;
-						
                                     if ( board[INDEX + : 2] == opposite_player)
 			
                                         begin
 														  oppo_around <= 1;
 														  
                                             valid <= 0;
-                                            while (curr_y != 0) 
+                                            while (curr_y > 0) 
                                                 begin 
                                                     curr_y <=  curr_y -1;
                                                     INDEX <= INDEX - 16;
@@ -57,20 +59,20 @@ module checkValidHelper (
 
                             else 
                                 valid <= 0; 
-                        end
+                        end  
 
                 3'b001: begin //vertically down
                             if (y < 6)
                                 begin 
                                     curr_y <= y + 1;
-                                    INDEX <= 8 * curr_y + curr_x;
+                                    INDEX <= INDEX + 16;
                                     if ( board[INDEX + : 2]== opposite_player)
                                         begin
                                             valid <= 0;
-                                            while (curr_y != 7) 
+                                            while (curr_y < 7) 
                                                 begin 
                                                     curr_y <=  curr_y + 1;
-                                                    INDEX <= 8 * curr_y + curr_x;
+                                                    INDEX <= INDEX + 16;
                                                     if (board[INDEX + : 2] == player)
                                                         valid <= 1;
                                                 end 
@@ -87,14 +89,14 @@ module checkValidHelper (
                             if (x > 1)
                                 begin 
                                     curr_x <= x -1;
-                                    INDEX <= 8 * curr_y + curr_x;
+                                    INDEX <= INDEX - 2;
                                     if ( board[INDEX + : 2]== opposite_player)
                                         begin
                                             valid <= 0;
-                                            while (curr_x != 0) 
+                                            while (curr_x > 0) 
                                                 begin 
                                                     curr_x <=  curr_x -1;
-                                                     INDEX <= 8 * curr_y + curr_x;
+                                                     INDEX <= INDEX - 2;
                                                     if (board[INDEX + : 2] == player)
                                                         valid <= 1;
                                                 end 
@@ -111,14 +113,14 @@ module checkValidHelper (
                             if (x < 6)
                                 begin 
                                     curr_x <= x + 1;
-                                    INDEX <= 8 * curr_y + curr_x;
+                                    INDEX <= INDEX + 2;
                                     if ( board[INDEX + : 2]== opposite_player)
                                         begin
                                             valid <= 0;
-                                            while (curr_x != 0) 
+                                            while (curr_x < 7) 
                                                 begin 
                                                     curr_x <=  curr_x + 1;
-                                                    INDEX <= 8 * curr_y + curr_x;
+                                                    INDEX <= INDEX + 2;
                                                     if (board[INDEX + : 2] == player)
                                                         valid <= 1;
                                                 end 
@@ -134,17 +136,17 @@ module checkValidHelper (
                 3'b100: begin  // left top
                             if ((y > 1) && (x > 1))
                                 begin 
-                                    curr_x <= x -1;
+                                    curr_x <= x - 1;
                                     curr_y <= y - 1;
-                                    INDEX <= 8 * curr_y + curr_x;
+                                    INDEX <= INDEX - 18;
                                     if ( board[INDEX + : 2]== opposite_player)
                                         begin
                                             valid <= 0;
-                                            while ((curr_x != 0) && (curr_y != 0))
+                                            while ((curr_x > 0) && (curr_y > 0))
                                                 begin 
                                                     curr_x <=  curr_x -1;
                                                     curr_y <= curr_y -1;
-                                                    INDEX <= 8 * curr_y + curr_x;
+                                                    INDEX <=  INDEX - 18;
                                                     if (board[INDEX + : 2] == player)
                                                         valid <= 1;
                                                 end 
@@ -162,11 +164,11 @@ module checkValidHelper (
                                 begin 
                                     curr_x <= x -1;
                                     curr_y <= y + 1;
-                                    INDEX <= 8 * curr_y + curr_x;
+                                    INDEX <= INDEX + 14;
                                     if ( board[INDEX + : 2]== opposite_player)
                                         begin
                                             valid <= 0;
-                                            while ((curr_x != 0) && (curr_y != 7))
+                                            while ((curr_x > 0) && (curr_y < 7))
                                                 begin 
                                                     curr_x <=  curr_x - 1;
                                                     curr_y <= curr_y  + 1;
@@ -188,11 +190,11 @@ module checkValidHelper (
                                 begin 
                                     curr_x <= x + 1;
                                     curr_y <= y - 1;
-                                    INDEX <= 8 * curr_y + curr_x;
+                                    INDEX <= INDEX - 14;
                                     if ( board[INDEX + : 2]== opposite_player)
                                         begin
                                             valid <= 0;
-                                            while ((curr_x != 7) && (curr_y != 0))
+                                            while ((curr_x < 7) && (curr_y > 0))
                                                 begin 
                                                     curr_x <=  curr_x + 1;
                                                     curr_y <= curr_y - 1;
@@ -214,11 +216,11 @@ module checkValidHelper (
                                 begin 
                                     curr_x <= x + 1;
                                     curr_y <= y + 1;
-                                    INDEX <= 8 * curr_y + curr_x;
+                                    INDEX <= INDEX + 18 ;
                                     if ( board[INDEX + : 2]== opposite_player)
                                         begin
                                             valid <= 0;
-                                            while ((curr_x != 7) && (curr_y != 7))
+                                            while ((curr_x < 7) && (curr_y < 7))
                                                 begin 
                                                     curr_x <=  curr_x +1;
                                                     curr_y <= curr_y +1;

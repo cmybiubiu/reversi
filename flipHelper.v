@@ -13,13 +13,13 @@ module flipHelper (
     );
 
     reg [2:0] curr_x, curr_y;
-    reg [7:0] index;
+    reg [6:0] index;
     wire [2:0] end_x, end_y;
     assign end_x = end_point[2:0];
     assign end_y = end_point[5:3];
-    localparam [1:0] player = {1'b1, player_black};
+    wire [1:0] player = {1'b1, player_black};
 
-    always (posedge clk)
+    always @(posedge clk)
     begin 
         if (resetn)
             result_board <= board;
@@ -27,7 +27,8 @@ module flipHelper (
             begin 
                 curr_x <= x;
                 curr_y <= y;
-                index <= 8 * curr_y + curr_x;
+                index[6:1] <= {y,x};
+					 index[0] <= 1'b0;
                 case (direction)
                 3'b000: begin //vertically upper 
                             if (reverse_enable)
@@ -35,8 +36,8 @@ module flipHelper (
                                     while (curr_y > end_y)
                                         begin 
                                             curr_y <= curr_y - 1;
-                                            index <= 8 * curr_y + curr_x;
-                                            board [index + : 2] <= player;
+                                            index <= index - 16;
+                                            result_board[index + : 2] <= player;
                                         end 
                                 end 
                             else 
@@ -49,8 +50,8 @@ module flipHelper (
                                     while (curr_y < end_y)
                                         begin 
                                             curr_y <= curr_y + 1;
-                                            index <= 8 * curr_y + curr_x;
-                                            board [index + : 2] <= player;
+                                            index <= index + 16;
+                                            result_board[index + : 2] <= player;
                                         end 
                                 end 
                             else 
@@ -62,8 +63,8 @@ module flipHelper (
                                     while (curr_x > end_x)
                                         begin 
                                             curr_x <= curr_x - 1;
-                                            index <= 8 * curr_y + curr_x;
-                                            board [index + : 2] <= player;
+                                            index <= index - 2;
+                                            result_board[index + : 2] <= player;
                                         end 
                                 end 
                             else 
@@ -75,8 +76,8 @@ module flipHelper (
                                     while (curr_x < end_x)
                                         begin 
                                             curr_x <= curr_x + 1;
-                                            index <= 8 * curr_y + curr_x;
-                                            board [index + : 2] <= player;
+                                            index <= index + 2;
+                                            result_board[index + : 2] <= player;
                                         end 
                                 end 
                             else 
@@ -89,8 +90,8 @@ module flipHelper (
                                         begin 
                                             curr_x <= curr_x - 1;
                                             curr_y <= curr_y - 1;
-                                            index <= 8 * curr_y + curr_x;
-                                            board [index + : 2] <= player;
+                                            index <= index - 18;
+                                            result_board[index + : 2] <= player;
                                         end 
                                 end 
                             else 
@@ -103,8 +104,8 @@ module flipHelper (
                                         begin 
                                             curr_x <= curr_x - 1;
                                             curr_y <= curr_y + 1;
-                                            index <= 8 * curr_y + curr_x;
-                                            board [index + : 2] <= player;
+                                            index <= index + 14;
+                                            result_board[index + : 2] <= player;
                                         end 
                                 end 
                             else 
@@ -117,8 +118,8 @@ module flipHelper (
                                         begin 
                                             curr_x <= curr_x + 1;
                                             curr_y <= curr_y - 1;
-                                            index <= 8 * curr_y + curr_x;
-                                            board [index + : 2] <= player;
+                                            index <= index - 14;
+                                           result_board[index + : 2] <= player;
                                         end 
                                 end 
                             else 
@@ -131,8 +132,8 @@ module flipHelper (
                                         begin 
                                             curr_x <= curr_x + 1;
                                             curr_y <= curr_y + 1;
-                                            index <= 8 * curr_y + curr_x;
-                                            board [index + : 2] <= player;
+                                            index <= index + 18;
+                                            result_board[index + : 2] <= player;
                                         end 
                                 end 
                             else 
