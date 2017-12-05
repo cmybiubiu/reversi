@@ -228,9 +228,8 @@ module checkValidHelper (
                         end
 
 
-
+                endcase
             end
-        endcase
     end
 
     assign end_point = {index1, index2};
