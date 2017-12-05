@@ -30,7 +30,7 @@ module datapath(
 	
 	//Need 3D array of board. board is 8x8 node and stores a 2 bit value per node
 	//Example: board[y][x][1:0] returns the 2 bit value at coord (x,y)
-	reg [1:0] board[7:0][7:0];
+	reg [1:0] board[2:0][2:0];
 	
 	//add variables, regs, and wires here
 	
@@ -64,7 +64,7 @@ module datapath(
 	place();
 	
 	//when a piece is placed, flips all possible pieces, outputs an updated board and draws each flip 1 at a time
-	flip();
+	flip();          
 	
 	//Keeps track of the score
 	ScoreManager();
