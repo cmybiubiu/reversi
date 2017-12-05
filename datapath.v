@@ -91,7 +91,7 @@ module datapath(
 	//the output from TurnManager. If determineCurrent is 1, determines the turn of current colour from the output of TurnManager.
 	determineHasTurn();
 	
-	//Some reset processes may (not sure about this) take time, 
+	//Some reset processes may (not sure about this, might not need) take time, 
 	//so this will take in the reset complete signals of those modules and output a general reset complete
 	determineResetComplete();
 			
