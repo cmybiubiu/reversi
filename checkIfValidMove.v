@@ -1,12 +1,12 @@
 module checkIfValidMove (
-            input clk;
-            input resetn;
-            input [2:0]x;
-            input [2:0]y;
-            input player_black;
-            input [127:0] board;
+            input clk,
+            input resetn,
+            input [2:0]x,
+            input [2:0]y,
+            input player_black,
+            input [127:0] board,
 
-            output [7:0] valids;
+            output [7:0] valid,
             output [47:0] end_points
 );
     checkValidHelper c0(
