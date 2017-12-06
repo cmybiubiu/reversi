@@ -10,6 +10,7 @@ module flip(
 );
     wire  [127: 0] wire0, wire1, wire2, wire3, wire4, wire5, wire6;
 
+
     always @(posedge clk)
     begin 
         if (resetn) 
