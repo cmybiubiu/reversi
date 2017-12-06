@@ -8,7 +8,8 @@ module checkValidHelper (
         input player_black,
 
         output reg valid,
-        output [5:0] end_point
+        output [5:0] end_point,
+		  output reg checkDone
         );
     
     reg [2:0] curr_x, curr_y;
@@ -31,8 +32,10 @@ module checkValidHelper (
 					 INDEX[6:1] <= {y, x};
 					 INDEX[0] <= 1'b0;
 					 curr_piece <= board[INDEX +: 2];
+					 checkDone <= 0;
                 case (direction)
                 3'b000: begin  //vertically upper
+									 checkDone <= 1;
                             if ((y > 1) && (curr_piece == 2'b00))
                                 begin 
                                     curr_y <= curr_y - 1;
@@ -62,6 +65,7 @@ module checkValidHelper (
                         end  
 
                 3'b001: begin //vertically down
+									 checkDone <= 1;
                             if (y < 6)
                                 begin 
                                     curr_y <= y + 1;
@@ -86,6 +90,7 @@ module checkValidHelper (
                         end
                 
                 3'b010: begin //horizontally left
+									 checkDone <= 1;
                             if (x > 1)
                                 begin 
                                     curr_x <= x -1;
@@ -110,6 +115,7 @@ module checkValidHelper (
                         end
 
                 3'b011: begin // horizontally right 
+									 checkDone <= 1;
                             if (x < 6)
                                 begin 
                                     curr_x <= x + 1;
@@ -134,6 +140,7 @@ module checkValidHelper (
                         end
 
                 3'b100: begin  // left top
+									 checkDone <= 1;
                             if ((y > 1) && (x > 1))
                                 begin 
                                     curr_x <= x - 1;
@@ -160,6 +167,7 @@ module checkValidHelper (
                         end
 
                 3'b101: begin // left bottom 
+									 checkDone <= 1;
                             if ((y < 6) && (x > 1))
                                 begin 
                                     curr_x <= x -1;
@@ -186,6 +194,7 @@ module checkValidHelper (
                         end
 
                 3'b110:begin // right top
+									 checkDone <= 1;
                             if ((y > 1) && (x < 6))
                                 begin 
                                     curr_x <= x + 1;
@@ -212,6 +221,7 @@ module checkValidHelper (
                         end
 
                 3'b111:begin //right bottom
+									 checkDone <= 1;
                             if ((y < 6) && (x < 6))
                                 begin 
                                     curr_x <= x + 1;
