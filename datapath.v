@@ -1,3 +1,5 @@
+`include "drawBoard.v"
+
 module datapath(
 			//should be input to most, if not all modules
 			input clk,
@@ -41,6 +43,16 @@ module datapath(
 	//Could use ram for this?
 	reg [127:0] board;
 	
+	//go wires
+	wire resetDone, drawBoardDone, drawInitialPiecesDone, moveHighlightDone, checkIfValidMoveDone, placeDone;
+	wire flipDone, ScoreManagerDone, determineHasTurnDone, TurnManagerDone, removeHighlightDone;
+	
+	//colour wires
+	
+	//x wires
+	
+	//y wires
+	
 	//add variables, regs, and wires here
 	
 	//go selector
@@ -71,13 +83,37 @@ module datapath(
 			go = 0;
 	end
 	
-	//add datapath_out_colour multiplexer here
+	always @(*) begin
+		if (drawBoardEn) begin
+			datapath_out_colour = drawBoardColour;
+			datapath_out_x = drawBoardX;
+			datapath_out_y = drawBoardY;
+			end
+		else if (drawInitialPiecesEn) begin
+			datapath_out_colour = drawInitialPiecesColour;
+			datapath_out_x = drawPieceX;
+			datapath_out_y = drawPieceY;
+			end
+		else if (moveHighlightEn) begin
+			datapath_out_colour = moveHighlightColour;
+			datapath_out_x = moveHighlightX;
+			datapath_out_y = moveHighlightY;
+			end
+		else if (placeEn | flipEn) begin
+			datapath_out_colour = TurnManagerColour;
+			datapath_out_x = drawPieceX;
+			datapath_out_y = drawPieceY;
+			end
+		else if (removeHighlightEn) begin
+			datapath_out_colour = removeHighlightColour;
+			datapath_out_x = removeHighlightX;
+			datapath_out_y = removeHighlightY;
+			end
+	end
 	
-	//data_path_out_ coords multiplexer here
 	
-	
-	
-	//draws and flips pieces
+	//draws and flips pieces. Need drawPieceEn and drawPieceDone signals
+	//use as helper function?
 	drawPiece();
 	
 	//inputs of moveRightEn, moveUpEn, etc. Updates x and y, outputs feed into moveHiglight
@@ -94,7 +130,16 @@ module datapath(
 	TurnManager();
 	
 	//draw the initial board
-	drawBoard();
+	drawBoard(
+				.drawBoardEn(drawBoardEn),
+				.clk(CLOCK_50),
+				.resetn(resetn),
+				
+				.drawBoardColour(drawBoardColour),
+				.drawBoardX(drawBoardX), 
+				.drawBoardY(drawBoardY),
+				.drawBoardDone(drawBoardDone)
+				);
 	
 	//draws the starting 4 pieces at the center of the board
 	drawInitialPieces();
@@ -115,7 +160,10 @@ module datapath(
 	//draws the score
 	drawScore();
 	
-	//endgame should remove the highlight of the current player position
+	//Helper function used in drawInitialBoard and moveHighlight
+	drawHighlight();
+	
+	//endgame should remove the highlight of the current player position. Helper Function
 	removeHighlight();
 	
 	//No input, happens after Display_Winner_Wait
