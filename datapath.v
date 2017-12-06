@@ -54,22 +54,20 @@ module datapath(
 		else if (moveHighlightEn)
 			go = moveHighlightDone;
 		else if (checkIfValidMoveEn)
-		
+			go = checkIfValidMoveDone;
 		else if (placeEn)
-		
+			go = placeDone;
 		else if (flipEn)
-		
+			go = flipDone;
 		else if (scoreManagerEn)
-		
+			go = ScoreManagerDone;
 		else if (determineHasTurnEn)
-		
-		else if (determineOpponent)
-		
-		else if (determineCurrent)
-		
+			go = determineHasTurnDone;
 		else if (TurnManagerEn)
-		
+			go = TurnManagerDone;
 		else if (removeHighlightEn)
+			go = removeHighlightDone;
+	end
 	
 	//add datapath_out_colour multiplexer here
 	
@@ -86,8 +84,6 @@ module datapath(
 	//draws and erases current position highlight when player moves, and also changes colour of the highlight
 	//outputs erase old position coordinates and feeds them into itself.
 	moveHiglight();
-	
-	moveXYCoord();
 	
 	//When enter is pressed, checks if player can place a piece down. Also checks for all possible flips.
 	checkIfValidMove();
