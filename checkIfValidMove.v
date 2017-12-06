@@ -8,9 +8,9 @@ module checkIfValidMove (
             input player_black,
             input [127:0] board,
 
-            output [7:0] valids,
-            output [47:0] end_points,
-				output checkIfValidMoveDone
+            output reg [7:0] valids,
+            output reg [47:0] end_points,
+				output reg checkIfValidMoveDone
 );
 
 	 
@@ -145,4 +145,4 @@ module checkIfValidMove (
         .end_point(end_points[47:42]),
 		  .checkDone(checks[7])
         );
-endmodule
+endmodule 

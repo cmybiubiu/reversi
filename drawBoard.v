@@ -32,7 +32,7 @@ module drawBoard(
 	end
 			
 	always @(posedge clk) begin
-		if (resetn) begin
+		if (resetn | drawBoardDone) begin
 			xAdd <= 0;
 			yAdd <= 0;
 			secondHalfHori <= 0;
