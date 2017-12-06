@@ -1,3 +1,5 @@
+`include "checkValidHelper.v" 
+
 module checkIfValidMove (
             input clk,
             input resetn,
@@ -6,7 +8,7 @@ module checkIfValidMove (
             input player_black,
             input [127:0] board,
 
-            output [7:0] valid,
+            output [7:0] valids,
             output [47:0] end_points
 );
     checkValidHelper ch0(

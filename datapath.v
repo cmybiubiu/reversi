@@ -43,7 +43,7 @@ module datapath(
 	
 	//add variables, regs, and wires here
 	
-	//add go multiplexer here
+	//go selector
 	always @(*) begin
 		if (resetn)
 			go = resetDone;
@@ -67,6 +67,8 @@ module datapath(
 			go = TurnManagerDone;
 		else if (removeHighlightEn)
 			go = removeHighlightDone;
+		else
+			go = 0;
 	end
 	
 	//add datapath_out_colour multiplexer here
