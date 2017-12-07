@@ -220,11 +220,13 @@ module datapath(
 	//checkIfValidMove();
 	
 	//checks whose turn it is aka. controls datapath_out_colour, depending on mux
+	wire blackWhite;
 	TurnManager tm0(
 				.TurnManagerEn(TurnManagerEn), 
 				.clk(clk),
 				.resetn(resetn),
 				
+				.blackWhite(blackWhite),
 				.TurnManagerColour(TurnManagerColour)
 				);
 	
