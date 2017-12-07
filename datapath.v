@@ -156,6 +156,17 @@ module datapath(
 			end
 	end
 	
+	wire [4:0] address;
+	wire [3:0] data, q;
+	wire wren;
+	ram32x4 board(
+					.address(address),
+					.clock(clk),
+					.data(data),
+					.wren(wren),
+					.q(q)
+					);
+	
 	//draws and flips pieces. Need drawPieceEn and drawPieceDone signals
 	//use as helper function?
 	drawPiece dp0(

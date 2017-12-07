@@ -5,8 +5,6 @@
 
 module main (  // draw single node (square)
 		input			CLOCK_50;				//	50 MHz
-		input   [9:0]   SW;
-		input   [3:0]   KEY;
 		
 		//inputs for keyboard_press_driver
 		input    PS2_DAT, // PS2 data line
