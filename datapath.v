@@ -26,7 +26,8 @@ module datapath(
 			input removeHighlightEn,
 			
 			//bit coordinates sent to the VGA to be drawn
-			output reg [7:0] datapath_out_x, datapath_out_y,
+			output reg [7:0] datapath_out_x, 
+			output reg [6:0] datapath_out_y,
 			
 			//datapath_out_colour depends on state (multiplexer)
 			output reg [2:0] datapath_out_colour,
@@ -37,8 +38,8 @@ module datapath(
 			output hasTurn
 			);
 	//current coordinate location of the player on the screen		
-	reg [7:0] x;
-	reg [6:0] y;
+	reg [2:0] x;
+	reg [2:0] y;
 	
 	//Could use ram for this?
 	reg [127:0] board;
@@ -48,12 +49,16 @@ module datapath(
 	wire flipDone, ScoreManagerDone, determineHasTurnDone, TurnManagerDone, removeHighlightDone;
 	
 	//colour wires
-	
+	wire [2:0] drawBoardColour, drawInitialPiecesColour, moveHighlightColour, TurnManagerColour, removeHighlightColour;
 	//x wires
-	
+	wire [7:0] drawBoardX, drawPieceX, moveHighlightX, removeHighlightX;
 	//y wires
+	wire [6:0] drawBoardY, drawPieceY, moveHighlightY, removeHighlightY;
 	
-	//add variables, regs, and wires here
+	//x wires to drawPiece multiplexer
+	wire [2:0] drawInitialPiecesX, flipX;
+	//y wires to drawPiece multiplexer
+	wire [2:0] drawInitialPiecesY, flipY;
 	
 	//go selector
 	always @(*) begin
@@ -83,6 +88,7 @@ module datapath(
 			go = 0;
 	end
 	
+	//x, y, and colour selector
 	always @(*) begin
 		if (drawBoardEn) begin
 			datapath_out_colour = drawBoardColour;
@@ -111,26 +117,56 @@ module datapath(
 			end
 	end
 	
+	//wires to drawPiece
+	reg [2:0] drawPieceInX, drawPieceInY;
+	wire [2:0] drawPieceInXWire, drawPieceInYWire;
+	assign drawPieceInXWire = drawPieceInX;
+	assign drawPieceInYWire = drawPieceInY;
+	//drawPieceInXY selector
+	always @(*) begin
+		if (drawInitialPiecesEn) begin
+			drawPieceInX = drawInitialPiecesX;
+			drawPieceInY = drawInitialPiecesY;
+			end
+		else if (placeEn) begin
+			drawPieceInX = x; //current coords for x and y
+			drawPieceInY = y;
+			end
+		else if (flipEn) begin
+			drawPieceInX = flipX;
+			drawPieceInY = flipY;
+			end
+	end
 	
 	//draws and flips pieces. Need drawPieceEn and drawPieceDone signals
 	//use as helper function?
-	drawPiece();
+	drawPiece dp0(
+				.clk(CLOCK_50),
+            .resetn(resetn),
+            .x(drawPieceInXWire),
+            .y(drawPieceInYWire),
+				.drawPieceEn(drawPieceEn),
+
+            .drawPieceX(drawPieceX),
+            .drawPieceY(drawPieceY),
+				.drawPieceDone(drawPieceDone)
+				);
 	
 	//inputs of moveRightEn, moveUpEn, etc. Updates x and y, outputs feed into moveHiglight
-	updateXYCoord();
+	//updateXYCoord();
 	
 	//draws and erases current position highlight when player moves, and also changes colour of the highlight
 	//outputs erase old position coordinates and feeds them into itself.
-	moveHiglight();
+	//moveHiglight();
 	
 	//When enter is pressed, checks if player can place a piece down. Also checks for all possible flips.
-	checkIfValidMove();
+	//checkIfValidMove();
 	
 	//checks whose turn it is aka. controls datapath_out_colour, depending on mux
-	TurnManager();
+	//TurnManager();
 	
 	//draw the initial board
-	drawBoard(
+	drawBoard db0(
 				.drawBoardEn(drawBoardEn),
 				.clk(CLOCK_50),
 				.resetn(resetn),
@@ -142,39 +178,48 @@ module datapath(
 				);
 	
 	//draws the starting 4 pieces at the center of the board
-	drawInitialPieces();
+	drawInitialPieces dip0(
+					.clk(CLOCK_50),
+					.drawInitialPiecesEn(drawInitialPiecesEn),
+					.resetn(resetn),
+					
+					.drawInitialPiecesX(drawInitialPiecesX),
+					.drawInitialPiecesY(drawInitialPiecesY),
+					.drawInitialPiecesColour(drawInitialPiecesColour),
+					.drawInitialPiecesDone(drawInitialPiecesDone)
+					);
 	
 	//keeps track of where the Highlight is
-	PlayerLocation();
+	//PlayerLocation();
 	
 	//updates the board when a piece is placed
-	place();
+	//place();
 	
 	//when a piece is placed, flips all possible pieces, Takes input from checkIfValidMove()
 	//outputs an updated board and draws each flip 1 at a time
-	flip();          
+	//flip();          
 	
 	//Keeps track of the score
-	ScoreManager();
+	//ScoreManager();
 	
 	//draws the score
-	drawScore();
+	//drawScore();
 	
 	//Helper function used in drawInitialBoard and moveHighlight
-	drawHighlight();
+	//drawHighlight();
 	
 	//endgame should remove the highlight of the current player position. Helper Function
-	removeHighlight();
+	//removeHighlight();
 	
 	//No input, happens after Display_Winner_Wait
-	clearPieces();
+	//clearPieces();
 	
 	//determines whether or not a player has a turn. If determineOpponent is 1, determines the turn of opposite colour of
 	//the output from TurnManager. If determineCurrent is 1, determines the turn of current colour from the output of TurnManager.
-	determineHasTurn();
+	//determineHasTurn();
 	
 	//Some reset processes may (not sure about this, might not need) take time, 
 	//so this will take in the reset complete signals of those modules and output a general reset complete
-	determineResetComplete();
+	//determineResetComplete();
 			
 endmodule 
