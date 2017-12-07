@@ -256,6 +256,19 @@ module datapath(
 
 	//updates the board when a piece is placed
 	//place();
+	placeSecond pl0( .x(x),
+							.y(y),
+							.placeEn(placeEn),
+							.q(q),
+							.resetn(resetn),
+							.clk(clk),
+							.player_black(blackWhite),
+								
+							.wren(wren),
+							.address(address),
+							.data(data),
+							.placeeDone(placeDone)
+							);
 	
 	//when a piece is placed, flips all possible pieces, Takes input from checkIfValidMove()
 	//outputs an updated board and draws each flip 1 at a time
