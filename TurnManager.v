@@ -5,10 +5,11 @@ module TurnManager(
 				input clk,
 				input resetn,
 				
-				output reg TurnManagerColour
+				output reg blackWhite
+				output reg [2:0] TurnManagerColour
 				);
-	localparam 	black = 1'b0,
-					white = 1'b1;
+	localparam 	black = 1'b1,
+					white = 1'b0;
 	
 	always@(posedge clk)
 	begin
@@ -16,6 +17,14 @@ module TurnManager(
 			TurnManagerColour <= black; //start as black
 		else if (TurnManagerEn)
 			TurnManagerColour <= ~TurnManagerColour;
+	end
+	
+	always @(*)
+	begin
+		if (blackWhite == black)
+			TurnManagerColour = 3'b000;
+		else
+			TurnManagerColour = 3'b111l
 	end
 
 endmodule 
