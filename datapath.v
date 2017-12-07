@@ -260,7 +260,7 @@ module datapath(
 							.q(q),
 							.resetn(resetn),
 							.clk(clk),
-							.player_black(player_black),
+							.player_black(blackWhite),
 								
 							.wren(wren),
 							.address(address),
