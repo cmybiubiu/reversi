@@ -24,7 +24,7 @@ module TurnManager(
 		if (blackWhite == black)
 			TurnManagerColour = 3'b000;
 		else
-			TurnManagerColour = 3'b111l
+			TurnManagerColour = 3'b111;
 	end
 
 endmodule 
