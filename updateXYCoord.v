@@ -6,14 +6,23 @@ module updateXYCoord(
 						input moveLeftEn,
 						input moveUpEn,
 						input moveDownEn,
+						input resetn,
 						
-						
+						output reg [2:0] oldXCoord,
+						output reg [2:0] oldYCoord,
 						output reg [2:0] nxtXCoord,
 						output reg [2:0] nxtYCoord
 						);
 		always @(posedge clk)
 		begin
-			if (moveRightEn& (currentXCoord < 7))
+			oldXCoord <= currentXCoord;
+			oldYCoord <= currentYCoord;
+			if (resetn)
+			begin
+				nxtXCoord <= currentXCoord;
+				nxtYCoord <= currentYCoord;
+			end
+			else if (moveRightEn& (currentXCoord < 7))
 			begin
 				nxtXCoord <= currentXCoord + 1;
 			end

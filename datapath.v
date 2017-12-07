@@ -40,6 +40,21 @@ module datapath(
 	//current coordinate location of the player on the screen		
 	reg [2:0] x;
 	reg [2:0] y;
+	wire [2:0] nxtX, nxtY;
+	
+	always@(*)
+	begin
+		if (resetn)
+		begin
+			x = 3;
+			y = 3;
+		end
+		else if (moveRightEn| moveLeftEn| moveUpEn|moveDownEn)
+		begin
+			x = nxtX;
+			y = nxtY;
+		end
+	end
 	
 	//Could use ram for this?
 	reg [127:0] board;
@@ -59,6 +74,9 @@ module datapath(
 	wire [2:0] drawInitialPiecesX, flipX;
 	//y wires to drawPiece multiplexer
 	wire [2:0] drawInitialPiecesY, flipY;
+	
+	//wires from updateXYCoord to moveHighlight
+	wire [2:0] oldXCoord, oldYCoord;
 	
 	//go selector
 	always @(*) begin
@@ -153,8 +171,22 @@ module datapath(
 				);
 	
 	//inputs of moveRightEn, moveUpEn, etc. Updates x and y, outputs feed into moveHiglight
-	//updateXYCoord();
-	
+	updateXYCoord uxyc0(
+					.currentXCoord(x),
+					.currentYCoord(y),
+					.clk(CLOCK_50),
+					.moveRightEn(moveRightEn),
+					.moveLeftEn(moveLeftEn),
+					.moveUpEn(moveUpEn),
+					.moveDownEn(moveDownEn),
+					.resetn(resetn),
+					
+					.oldXCoord(oldXCoord),
+					.oldYCoord(oldYCoord),
+					.nxtXCoord(nxtX),
+					.nxtYCoord(nxtY)
+					);
+
 	//draws and erases current position highlight when player moves, and also changes colour of the highlight
 	//outputs erase old position coordinates and feeds them into itself.
 	//moveHiglight();
