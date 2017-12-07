@@ -10,7 +10,7 @@ module placeSecond(
 								output reg wren,
 								output reg [4:0] address,
 								output reg [3:0] data,
-								output reg placeeDone,
+								output reg placeeDone
 								);
 								
 		wire [5:0] position;
