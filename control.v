@@ -4,7 +4,7 @@ module control(
 			input clk,
 			input go,
 			input validMove,
-			input hasTurn
+			input hasTurn,
 			input enter, moveRight, moveLeft, moveUp, moveDown,
 			
 			output reg resetn,
@@ -25,7 +25,8 @@ module control(
 			output reg determineOpponent,
 			output reg determineCurrent,
 			output reg TurnManagerEn,
-			output reg removeHiglightEN,
+			output reg removeHighlightEn,
+			output reg clearPiecesEn,
 			
 			output reg [8:0] current_state
 			);
@@ -58,7 +59,7 @@ module control(
 							FLIP_AND_DRAW_PIECES 	= 9'b011101011,
 							UPDATE_SCORE				= 9'b011100011,
 							DRAW_SCORE 					= 9'b011100111,
-							TO_DEtERMINE_OPPONENT	= 9'b010100111, //intermediate state
+							TO_DETERMINE_OPPONENT	= 9'b010100111, //intermediate state
 							DETERMINE_OPPONENT_HAS_TURN = 9'b010110111,
 							OPPONENT_HAS_TURN 		= 9'b000110111,
 							DETERMINE_CURRENT_HAS_TURN = 9'b000010111,
@@ -86,8 +87,8 @@ module control(
 						WAIT_FOR_INPUT: begin 	
 														case({enter, moveRight, moveLeft, moveUp, moveDown})
 															5'b00001: next_state = TO_MOVE_DOWN;
-															5'b00010: next_state = TO_MOVE_UP:
-															5'b00100: next_state = TO_MOVE_LEFT:
+															5'b00010: next_state = TO_MOVE_UP;
+															5'b00100: next_state = TO_MOVE_LEFT;
 															5'b01000: next_state = TO_MOVE_RIGHT;
 															5'b10000: next_state = CHECK_IF_VALID_MOVE;
 															default: next_state = WAIT_FOR_INPUT;
@@ -106,15 +107,15 @@ module control(
 						AFTER_CHECK_IF_VALID:	next_state = validMove ? PLACE_AND_DRAW_PIECE : TO_DISPLAY_INVALID_1;
 						TO_DISPLAY_INVALID_1: 	next_state = TO_DISPLAY_INVALID_2;
 						TO_DISPLAY_INVALID_2: 	next_state = DISPLAY_INVALID;
-						DISPLAY_INVALID: 			next_state = DISPLAY_INVALID_WAIT //go ? DISPLAY_INVALID_WAIT : DISPLAY_INVALID; //for now, make go = 1 always.
-						DISPLAY_INVALID_WAIT: 	next_state = ERASE_INVALID //go ? ERASE_INVALID : DISPLAY_INVALID_WAIT; //for now, make go = 1 always.
-						ERASE_INVALID: 			next_state = WAIT_FOR_INPUT //go ? WAIT_FOR_INPUT : ERASE_INVALID; //for now, make go = 1 always.
+						DISPLAY_INVALID: 			next_state = DISPLAY_INVALID_WAIT; //go ? DISPLAY_INVALID_WAIT : DISPLAY_INVALID; //for now, make go = 1 always.
+						DISPLAY_INVALID_WAIT: 	next_state = ERASE_INVALID; //go ? ERASE_INVALID : DISPLAY_INVALID_WAIT; //for now, make go = 1 always.
+						ERASE_INVALID: 			next_state = WAIT_FOR_INPUT; //go ? WAIT_FOR_INPUT : ERASE_INVALID; //for now, make go = 1 always.
 						PLACE_AND_DRAW_PIECE: 	next_state = go ? FLIP_AND_DRAW_PIECES : PLACE_AND_DRAW_PIECE;
 						FLIP_AND_DRAW_PIECES: 	next_state = go ? UPDATE_SCORE : FLIP_AND_DRAW_PIECES;
 						UPDATE_SCORE:				next_state = go ? DRAW_SCORE : UPDATE_SCORE;
-						DRAW_SCORE: 				next_state = TO_DETERMINE_OPPONENT_HAS_TURN //go ? TO_DETERMINE_OPPONENT_HAS_TURN : DRAW_SCORE; //for now, make go = 1 always.
+						DRAW_SCORE: 				next_state = TO_DETERMINE_OPPONENT; //go ? TO_DETERMINE_OPPONENT_HAS_TURN : DRAW_SCORE; //for now, make go = 1 always.
 						TO_DETERMINE_OPPONENT: 	next_state = DETERMINE_OPPONENT_HAS_TURN; 
-						DETERMINE_OPPONENT_HAS_TURN: next_state = go ? OPPONENT_HAS_TURN : DETERMING_OPPONENT_HAS_TURN;
+						DETERMINE_OPPONENT_HAS_TURN: next_state = go ? OPPONENT_HAS_TURN : DETERMINE_OPPONENT_HAS_TURN;
 						OPPONENT_HAS_TURN: 		next_state = hasTurn ? TO_SWITCH_TURN_1 : DETERMINE_CURRENT_HAS_TURN;
 						DETERMINE_CURRENT_HAS_TURN: next_state = go ? CURRENT_HAS_TURN : DETERMINE_CURRENT_HAS_TURN;
 						CURRENT_HAS_TURN: 		next_state = hasTurn ? WAIT_FOR_INPUT : END_GAME;
@@ -152,10 +153,10 @@ module control(
 				  determineCurrent = 1'b0;
 				  TurnManagerEn = 1'b0;
 				  removeHighlightEn = 1'b0;
+				  clearPiecesEn = 1'b0;
 				  resetn = 1'b0;
 				  
 				  case (current_state)
-						INITIALIZE: //let all enable signals start off at 0
 						INITIAL_RESET: begin
 								resetn = 1'b1;
 								end
@@ -185,11 +186,11 @@ module control(
 						CHECK_IF_VALID_MOVE: begin
 								checkIfValidMoveEn = 1'b1;
 								end
-						DISPLAY_INVALID: //enables display invalid message, placeholder
-						DISPLAY_INVALID_WAIT: //enables timer that lasts 1 second, placeholder
-						ERASE_INVALID: //enables erase invalid message, placeholder
+//						DISPLAY_INVALID: //enables display invalid message, placeholder
+//						DISPLAY_INVALID_WAIT: //enables timer that lasts 1 second, placeholder
+//						ERASE_INVALID: //enables erase invalid message, placeholder
 						PLACE_AND_DRAW_PIECE: begin
-								placeEN = 1'b1;
+								placeEn = 1'b1;
 								writeEn = 1'b1;
 								end
 						FLIP_AND_DRAW_PIECES: begin
@@ -199,14 +200,14 @@ module control(
 						UPDATE_SCORE: begin
 								scoreManagerEn = 1'b1;
 								end
-						DRAW_SCORE: //enables score to be erased and then updated, placeholder
+//						DRAW_SCORE: //enables score to be erased and then updated, placeholder
 						DETERMINE_OPPONENT_HAS_TURN: begin
 								determineOpponent = 1'b1;
 								determineHasTurnEn = 1'b1;
 								end
 						DETERMINE_CURRENT_HAS_TURN: begin
 								determineCurrent = 1'b1;
-								determineHasTurnEN = 1'b1;
+								determineHasTurnEn = 1'b1;
 								end
 						SWITCH_TURN: begin
 								TurnManagerEn = 1'b1;
@@ -215,8 +216,8 @@ module control(
 								removeHighlightEn = 1'b1;
 								writeEn = 1'b1;
 								end
-						DISPLAY_WINNER: //enables score to be erased and then updated, placeholder
-						DISPLAY_WINNER_WAIT: //enables score to be erased and then updated, placeholder
+//						DISPLAY_WINNER: //enables score to be erased and then updated, placeholder
+//						DISPLAY_WINNER_WAIT: //enables score to be erased and then updated, placeholder
 						CLEAR_PIECES: begin
 								clearPiecesEn = 1'b1;
 								writeEn = 1'b1;

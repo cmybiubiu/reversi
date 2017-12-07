@@ -24,6 +24,7 @@ module datapath(
 			input determineCurrent,
 			input TurnManagerEn,
 			input removeHighlightEn,
+			input clearPiecesEn,
 			
 			//bit coordinates sent to the VGA to be drawn
 			output reg [7:0] datapath_out_x, 
@@ -56,12 +57,9 @@ module datapath(
 		end
 	end
 	
-	//Could use ram for this?
-	reg [127:0] board;
-	
 	//go wires
 	wire resetDone, drawBoardDone, drawInitialPiecesDone, moveHighlightDone, checkIfValidMoveDone, placeDone;
-	wire flipDone, ScoreManagerDone, determineHasTurnDone, TurnManagerDone, removeHighlightDone;
+	wire flipDone, ScoreManagerDone, determineHasTurnDone, TurnManagerDone, removeHighlightDone, clearPiecesDone;
 	
 	//colour wires
 	wire [2:0] drawBoardColour, drawInitialPiecesColour, moveHighlightColour, TurnManagerColour, removeHighlightColour;
@@ -102,6 +100,8 @@ module datapath(
 			go = TurnManagerDone;
 		else if (removeHighlightEn)
 			go = removeHighlightDone;
+		else if (clearPiecesEn)
+			go = clearPiecesDone;
 		else
 			go = 0;
 	end

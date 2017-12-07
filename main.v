@@ -4,7 +4,7 @@
 //Top Level Module
 
 module main (  // draw single node (square)
-		input			CLOCK_50;				//	50 MHz
+		input			CLOCK_50,			//	50 MHz
 		
 		//inputs for keyboard_press_driver
 		input    PS2_DAT, // PS2 data line
@@ -12,14 +12,14 @@ module main (  // draw single node (square)
 
 	// Declare your inputs and outputs here
 	// Do not change the following outputs
-		output			VGA_CLK;   				//	VGA Clock
-		output			VGA_HS;					//	VGA H_SYNC
-		output			VGA_VS;					//	VGA V_SYNC
-		output			VGA_BLANK_N;				//	VGA BLANK
-		output			VGA_SYNC_N;				//	VGA SYNC
-		output	[9:0]	VGA_R;   				//	VGA Red[9:0]
-		output	[9:0]	VGA_G;	 				//	VGA Green[9:0]
-		output	[9:0]	VGA_B;   				//	VGA Blue[9:0]
+		output			VGA_CLK,   				//	VGA Clock
+		output			VGA_HS,					//	VGA H_SYNC
+		output			VGA_VS,					//	VGA V_SYNC
+		output			VGA_BLANK_N,				//	VGA BLANK
+		output			VGA_SYNC_N,				//	VGA SYNC
+		output	[9:0]	VGA_R,   				//	VGA Red[9:0]
+		output	[9:0]	VGA_G,	 				//	VGA Green[9:0]
+		output	[9:0]	VGA_B   				//	VGA Blue[9:0]
 		);
 
 	
@@ -44,10 +44,10 @@ module main (  // draw single node (square)
 	wire hasTurn;
 	
 	//wires from control to datapath
-	wire resetn, writeEn, drawBoardEn, drawInitialPiecesEn, enterEn, moveRightEn, moveLeftEn, moveUpEn, moveDownEn;
+	wire writeEn, drawBoardEn, drawInitialPiecesEn, enterEn, moveRightEn, moveLeftEn, moveUpEn, moveDownEn;
 	wire moveHighlightEn, checkIfValidMoveEn, placeEn, flipEn, scoreManagerEn, determineHasTurnEn;
-	wire determineOpponent, determineCurrent, TurnManagerEn, removeHiglightEN,
-	wire [8:0] current_state
+	wire determineOpponent, determineCurrent, TurnManagerEn, removeHiglightEN, clearPiecesEn;
+	wire [8:0] current_state;
 
 	// Create an Instance of a VGA controller - there can be only one!
 	// Define th    // Next state logic aka our state table number of colours as well as the initial background
@@ -137,6 +137,7 @@ module main (  // draw single node (square)
 			.determineCurrent(determineCurrent),
 			.TurnManagerEn(TurnManagerEn),
 			.removeHiglightEn(removeHiglightEn),
+			.clearPiecesEn(clearPiecesEn)
 			);
 	
 	datapath d0(
@@ -162,6 +163,7 @@ module main (  // draw single node (square)
 			.determineCurrent(determineCurrent),
 			.TurnManagerEn(TurnManagerEn),
 			.removeHiglightEn(removeHiglightEn),
+			.clearPiecesEn(clearPiecesEn),
 			
 			//output
 			.datapath_out_x(x), 
