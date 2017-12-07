@@ -10,7 +10,7 @@ module placeSecond(
 								output reg wren,
 								output reg [4:0] address,
 								output reg [3:0] data,
-								output reg placeeDone
+								output reg placeDone
 								);
 								
 		wire [5:0] position;
@@ -44,7 +44,7 @@ module placeSecond(
 							else
 							begin 
 								
-								if(positin[0] == 1'b0)
+								if(position[0] == 1'b0)
 								begin 
 									wren <= 1;
 									address <= position[5:1];
