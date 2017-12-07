@@ -45,6 +45,7 @@ module drawBoard(
 			if (!secondHalfHori & !vertical & !secondHalfVert) begin
 				if (yAdd == 104 & xAdd == 105) begin
 					yAdd <= 1;
+					xAdd <= 0;
 					secondHalfHori <= 1;
 					end
 				else begin
@@ -59,6 +60,7 @@ module drawBoard(
 			else if (!vertical & !secondHalfVert) begin
 				if (yAdd == 105 & xAdd == 105) begin
 					yAdd <= 0;
+					xAdd <= 0;
 					vertical <= 1;
 					end
 				else begin
@@ -71,12 +73,13 @@ module drawBoard(
 					end
 				end
 			else if (!secondHalfVert) begin
-				if (xAdd == 105 & yAdd == 104) begin
+				if (yAdd == 105 & xAdd == 104) begin
 					xAdd <= 1;
+					yAdd <= 0;
 					secondHalfVert <= 1;
 					end
 				else begin
-					if (xAdd == 105) begin
+					if (yAdd == 105) begin
 						yAdd <= 0;
 						xAdd <= xAdd + 13;
 						end
@@ -85,12 +88,13 @@ module drawBoard(
 					end
 				end
 			else begin
-				if (xAdd == 105 & yAdd == 105) begin
+				if (yAdd == 105 & xAdd == 105) begin
 					xAdd <= 0;
+					yAdd <= 0;
 					drawBoardDone <= 1;
 					end
 				else begin
-					if (xAdd == 105) begin
+					if (yAdd == 105) begin
 						yAdd <= 0;
 						xAdd <= xAdd + 13;
 						end

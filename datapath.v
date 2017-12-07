@@ -106,7 +106,7 @@ module datapath(
 			go = 0;
 	end
 	
-	//x, y, and colour selector
+	//data_out_x, data_out_y, and data_out_colour selector
 	always @(*) begin
 		if (drawBoardEn) begin
 			datapath_out_colour = drawBoardColour;
@@ -159,7 +159,7 @@ module datapath(
 	//draws and flips pieces. Need drawPieceEn and drawPieceDone signals
 	//use as helper function?
 	drawPiece dp0(
-				.clk(CLOCK_50),
+				.clk(clk),
             .resetn(resetn),
             .x(drawPieceInXWire),
             .y(drawPieceInYWire),
@@ -174,7 +174,7 @@ module datapath(
 	updateXYCoord uxyc0(
 					.currentXCoord(x),
 					.currentYCoord(y),
-					.clk(CLOCK_50),
+					.clk(clk),
 					.moveRightEn(moveRightEn),
 					.moveLeftEn(moveLeftEn),
 					.moveUpEn(moveUpEn),
@@ -189,18 +189,38 @@ module datapath(
 
 	//draws and erases current position highlight when player moves, and also changes colour of the highlight
 	//outputs erase old position coordinates and feeds them into itself.
-	//moveHiglight();
+	moveHighlight mh0(
+						.oldXCoord(oldXCoord),
+						.oldYCoord(oldYCoord),
+						.nxtXCoord(nxtX),
+						.nxtYCoord(nxtY),
+						.TurnManagerColour(TurnManagerColour),
+						.resetn(resetn),
+						.moveHighlightEn(moveHighlightEn),
+						.clk(clk),
+						
+						.moveHighlightX(moveHighlightX),
+						.moveHighlightY(moveHighlightY),
+						.moveHighlightColour(moveHighlightColour),
+						.moveHighlightDone(moveHighlightDone)
+						);
 	
 	//When enter is pressed, checks if player can place a piece down. Also checks for all possible flips.
 	//checkIfValidMove();
 	
 	//checks whose turn it is aka. controls datapath_out_colour, depending on mux
-	//TurnManager();
+	TurnManager tm0(
+				.TurnManagerEn(TurnManagerEn), 
+				.clk(clk),
+				.resetn(resetn),
+				
+				.TurnManagerColour(TurnManagerColour)
+				);
 	
 	//draw the initial board
 	drawBoard db0(
 				.drawBoardEn(drawBoardEn),
-				.clk(CLOCK_50),
+				.clk(clk),
 				.resetn(resetn),
 				
 				.drawBoardColour(drawBoardColour),
@@ -211,7 +231,7 @@ module datapath(
 	
 	//draws the starting 4 pieces at the center of the board
 	drawInitialPieces dip0(
-					.clk(CLOCK_50),
+					.clk(clk),
 					.drawInitialPiecesEn(drawInitialPiecesEn),
 					.resetn(resetn),
 					
@@ -220,10 +240,7 @@ module datapath(
 					.drawInitialPiecesColour(drawInitialPiecesColour),
 					.drawInitialPiecesDone(drawInitialPiecesDone)
 					);
-	
-	//keeps track of where the Highlight is
-	//PlayerLocation();
-	
+
 	//updates the board when a piece is placed
 	//place();
 	

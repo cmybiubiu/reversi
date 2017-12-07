@@ -1,5 +1,4 @@
-vlib reversi
-
+vlib work
 vlog -timescale 1ns/1ns drawPiece.v
 
 vsim drawPiece

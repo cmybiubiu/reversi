@@ -7,9 +7,8 @@ vsim TurnManager
 log {/*}
 add wave {/*}
 
-force {initialize} 1 0, 0 20
-force {nextTurn} 0 0, 1 25, 0 35, 1 60, 0 85
+force {TurnManagerEn} 0 0, 1 25, 0 35, 1 50
 force {clk} 0 0, 1 10 -r 20
-force {resetn} 0
+force {resetn} 0 0, 1 10, 0 30
 				
 run 100ns
